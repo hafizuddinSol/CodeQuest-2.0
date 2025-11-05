@@ -8,10 +8,10 @@ class ProgressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> progressItems = [
-      {'id': 1, 'name': 'Project Alpha', 'progress': 75, 'color': Colors.blue},
-      {'id': 2, 'name': 'Marketing Campaign', 'progress': 45, 'color': Colors.purple},
-      {'id': 3, 'name': 'Product Launch', 'progress': 90, 'color': Colors.green},
-      {'id': 4, 'name': 'Website Redesign', 'progress': 30, 'color': Colors.orange},
+      {'id': 1, 'name': 'Pseudocode', 'progress': 75, 'color': Colors.blue},
+      {'id': 2, 'name': 'Gannchart', 'progress': 45, 'color': Colors.purple},
+      {'id': 3, 'name': 'Flowchart Launch', 'progress': 90, 'color': Colors.green},
+      {'id': 4, 'name': 'Minigame', 'progress': 30, 'color': Colors.orange},
     ];
 
     final int overallProgress = (progressItems.fold<int>(
