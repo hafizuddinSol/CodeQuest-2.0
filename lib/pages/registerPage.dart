@@ -49,22 +49,50 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _submit() async {
     if (_formKey.currentState!.validate() && _selectedRole != null) {
       try {
-        // Create Firebase Auth user
+        // 🔹 Create Firebase Auth user
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim());
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
 
         String uid = userCredential.user!.uid;
 
-        // Save extra info in Firestore
+        // 🔹 Generate auto-increment studentId (only for Students)
+        String? newStudentId;
+        if (_selectedRole == 'Student') {
+          final counterRef =
+          FirebaseFirestore.instance.collection('metadata').doc('counters');
+          await FirebaseFirestore.instance.runTransaction((transaction) async {
+            final snapshot = await transaction.get(counterRef);
+            int current = 0;
+
+            if (snapshot.exists) {
+              current = snapshot.data()?['studentCounter'] ?? 0;
+            }
+
+            int next = current + 1;
+            newStudentId = 'S${next.toString().padLeft(3, '0')}';
+
+            // update counter atomically
+            transaction.set(
+              counterRef,
+              {'studentCounter': next},
+              SetOptions(merge: true),
+            );
+          });
+        }
+
+        // 🔹 Save user info to Firestore
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
           'username': _usernameController.text.trim(),
           'email': _emailController.text.trim(),
           'role': _selectedRole,
+          'studentId': newStudentId, // null for Teachers
           'createdAt': FieldValue.serverTimestamp(),
         });
 
+        // 🔹 Navigate to Dashboard
         widget.onRegistered();
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

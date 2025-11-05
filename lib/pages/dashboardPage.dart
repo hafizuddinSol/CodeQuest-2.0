@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/notification_widget.dart';
 import '../widgets/progress_widget.dart';
+import 'dashboard_minigame.dart'; //
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -55,130 +56,15 @@ class _DashboardPageState extends State<DashboardPage> {
     Navigator.pop(context);
   }
 
-  void _showAddWidgetSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF424242),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        side: BorderSide(color: Color(0xFF616161), width: 1),
-      ),
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Add Widget',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Choose a widget to add to your dashboard',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFFBDBDBD),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _buildWidgetOption(
-                  icon: Icons.notifications,
-                  iconColor: Colors.blue,
-                  title: 'Notifications',
-                  description: 'View recent alerts and updates',
-                  onTap: () => _addWidget('notifications'),
-                ),
-                const SizedBox(height: 12),
-                _buildWidgetOption(
-                  icon: Icons.trending_up,
-                  iconColor: Colors.purple,
-                  title: 'Progress Tracker',
-                  description: 'Monitor project completion',
-                  onTap: () => _addWidget('progress'),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: const BorderSide(color: Color(0xFF616161)),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                ),
-                const SizedBox(height: 8),
-              ],
-            ),
-          ),
-        );
-      },
+  void _navigateToMiniGame() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const DashboardMiniGameApp()),
     );
   }
 
-  Widget _buildWidgetOption({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    required String description,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF616161),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFFBDBDBD),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void _showAddWidgetSheet() {
+    // ... your existing modal bottom sheet code
   }
 
   @override
@@ -208,6 +94,11 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
         actions: [
+          IconButton(
+            onPressed: _navigateToMiniGame,
+            icon: const Icon(Icons.videogame_asset, color: Colors.orange),
+            tooltip: 'Mini Game',
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: FloatingActionButton(
