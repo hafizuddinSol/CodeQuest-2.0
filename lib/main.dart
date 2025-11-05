@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CodeQuest Auth',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: kBackgroundColor,
@@ -31,14 +32,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Wrapper for handling navigation after registration
+/// Wrapper to handle navigation after registration
 class RegisterPageWrapper extends StatelessWidget {
   const RegisterPageWrapper({super.key});
 
   void _navigateToDashboard(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const DashboardPage()),
+      MaterialPageRoute(builder: (_) => const DashboardPage()), // integrated A’s dashboard
     );
   }
 
