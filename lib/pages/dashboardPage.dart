@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/notification_widget.dart';
 import '../widgets/progress_widget.dart';
-import 'dashboard_minigame.dart'; //
+import 'dashboard_minigame.dart';
+import 'role_selection_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -59,7 +60,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void _navigateToMiniGame() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const DashboardMiniGameApp()),
+      MaterialPageRoute(builder: (_) => const RoleSelectionPage()),
     );
   }
 
