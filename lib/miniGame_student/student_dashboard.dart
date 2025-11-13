@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulam_project/pages/dashboardPage.dart';
+import 'package:sulam_project/pages/dashboardPage_student.dart';
 import 'gameScore.dart';
 import 'FlowchartBuilderGameStudent.dart';
 import '../../forum/home_screen.dart';
@@ -38,7 +38,7 @@ class StudentDashboard extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => DashboardPage(
+                    builder: (_) => DashboardPage_Student(
                       userRole: 'student',
                       username: studentName,
                     ),

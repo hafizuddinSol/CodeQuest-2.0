@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dashboardPage.dart'; // Import your DashboardPage
+import 'dashboardPage_student.dart'; // Import your DashboardPage
+import 'registerPage.dart';
 
 const Color kPrimaryColor = Color(0xFF4256A4);
 const Color kBackgroundColor = Color(0xFFF0F0FF);
@@ -76,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => DashboardPage(
+          builder: (_) => DashboardPage_Student(
             userRole: role,
             username: input,
           ),
@@ -162,6 +163,32 @@ class _LoginPageState extends State<LoginPage> {
                         : const Text('Log In', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => RegisterPage(
+                          onRegistered: (_, __) {}, // No dashboard navigation
+                          onSwitchToLogin: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const LoginPage()),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Don't have an account yet? Register Now.",
+                    style: TextStyle(
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
               ],
             ),
           ),

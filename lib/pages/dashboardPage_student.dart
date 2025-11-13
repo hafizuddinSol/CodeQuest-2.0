@@ -7,17 +7,17 @@ import 'role_selection_page.dart';
 import '../forum/home_screen.dart';
 import '../learning/learningHomePage.dart'; // ✅ Import your Learning Home Page
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage_Student extends StatefulWidget {
   final String userRole; // 'teacher' or 'student'
   final String username; // the user's name
 
-  const DashboardPage({super.key, required this.userRole, required this.username});
+  const DashboardPage_Student({super.key, required this.userRole, required this.username});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardPage_Student> createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardPageState extends State<DashboardPage_Student> {
   List<Widget> widgets = [];
 
   @override

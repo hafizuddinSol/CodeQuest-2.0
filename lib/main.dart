@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 
 // Screens
 import 'pages/registerPageWrapper.dart';
+import 'pages/logInPage.dart';
 import 'forum/home_screen.dart';
 
 // Material Management Pages
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       ),
 
       // Start at Register Page
-      home: const RegisterPageWrapper(),
+      home: const LoginPage(),
 
       // Routes
       routes: {
