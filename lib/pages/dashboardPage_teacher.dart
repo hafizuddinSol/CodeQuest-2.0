@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/notification_widget.dart';
-import '../widgets/progress_widget.dart';
-import '../widgets/RecentActivityWidget.dart';
-import '../miniGame_student/student_dashboard.dart';
+import '../miniGame_teacher/dashboard_minigame.dart';
 import '../forum/home_screen.dart';
 import '../learning/learningHomePage.dart';
 import 'logInPage.dart';
 import 'profilePage.dart';
 
-const Color kPrimaryColor = Color(0xFF2537B4);
+const Color kPrimaryColor = Color(0xFF4256A4);
 const Color kBackgroundColor = Color(0xFFF0F0FF);
 
-class DashboardPage_Student extends StatefulWidget {
+class DashboardPage_Teacher extends StatefulWidget {
   final String userRole;
   final String username;
 
-  const DashboardPage_Student({
+  const DashboardPage_Teacher({
     super.key,
     required this.userRole,
     required this.username,
   });
 
   @override
-  State<DashboardPage_Student> createState() => _DashboardPage_StudentState();
+  State<DashboardPage_Teacher> createState() => _DashboardPage_TeacherState();
 }
 
-class _DashboardPage_StudentState extends State<DashboardPage_Student> {
+class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
   final List<Widget> widgets = [];
 
   // Filters
@@ -37,23 +35,13 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
   @override
   void initState() {
     super.initState();
-
-    widgets.addAll([
-      NotificationWidget(
-        key: UniqueKey(),
-        onRemove: () => _removeWidget(0),
-        timeFilter: timeFilter,
-        topicFilter: topicFilter,
-      ),
-      ProgressWidget(
-        key: UniqueKey(),
-        onRemove: () => _removeWidget(1),
-      ),
-      RecentActivityWidget(
-        key: UniqueKey(),
-        onRemove: () => _removeWidget(2),   // index = 2
-      ),
-    ]);
+    // Only add NotificationWidget by default for teacher
+    widgets.add(NotificationWidget(
+      key: UniqueKey(),
+      onRemove: () => _removeWidget(0),
+      timeFilter: timeFilter,
+      topicFilter: topicFilter,
+    ));
   }
 
   void _removeWidget(int index) {
@@ -62,32 +50,16 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
     }
   }
 
-  void _addWidget(String type) {
+  void _addWidget() {
     setState(() {
       final newIndex = widgets.length;
-
-      if (type == 'notifications') {
-        widgets.add(NotificationWidget(
-          key: UniqueKey(),
-          onRemove: () => _removeWidget(newIndex),
-          timeFilter: timeFilter,
-          topicFilter: topicFilter,
-        ));
-      } else if (type == 'progress') {
-        widgets.add(ProgressWidget(
-          key: UniqueKey(),
-          onRemove: () => _removeWidget(newIndex),
-        ));
-      } else if (type == 'recent') {
-        widgets.add(
-          RecentActivityWidget(
-            key: UniqueKey(),
-            onRemove: () => _removeWidget(newIndex),
-          ),
-        );
-      }
+      widgets.add(NotificationWidget(
+        key: UniqueKey(),
+        onRemove: () => _removeWidget(newIndex),
+        timeFilter: timeFilter,
+        topicFilter: topicFilter,
+      ));
     });
-
     Navigator.pop(context);
   }
 
@@ -95,7 +67,7 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => StudentDashboard(studentName: widget.username),
+        builder: (_) => DashboardMiniGamePage(teacherName: widget.username),
       ),
     );
   }
@@ -104,41 +76,16 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
     await FirebaseAuth.instance.signOut();
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Signed out successfully")),
+      const SnackBar(
+        content: Text("Signed out successfully"),
+        duration: Duration(seconds: 2),
+      ),
     );
 
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const LoginPage()),
           (route) => false,
-    );
-  }
-
-  void _showAddWidgetSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => SizedBox(
-        height: 180,
-        child: Column(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Tambah Widget Notifikasi'),
-              onTap: () => _addWidget('notifications'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.show_chart),
-              title: const Text('Tambah Widget Pencapaian'),
-              onTap: () => _addWidget('progress'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.history),
-              title: const Text('Tambah Widget Aktiviti Terkini'),
-              onTap: () => _addWidget('recent'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -157,7 +104,24 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
     });
   }
 
-  // ---------------------------------------------------------------------------
+  void _showAddWidgetSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Add Notification Widget'),
+              onTap: _addWidget,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,12 +133,19 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Laman Utama',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              'Dashboard',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             Text(
-              'Selamat Datang, ${widget.username}',
-              style: const TextStyle(fontSize: 12, color: Colors.white70),
+              'Welcome, ${widget.username}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white70,
+              ),
             ),
           ],
         ),
@@ -185,7 +156,7 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
               if (value == 'learning') {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const LearningHomePage()));
               } else if (value == 'forum') {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
               } else if (value == 'minigame') {
                 _navigateToMiniGame();
               } else if (value == 'profile') {
@@ -197,7 +168,7 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'learning',
-                child: ListTile(leading: Icon(Icons.menu_book), title: Text('Laman Utama Pelajaran')),
+                child: ListTile(leading: Icon(Icons.menu_book), title: Text('Learning Homepage')),
               ),
               const PopupMenuItem(
                 value: 'forum',
@@ -205,7 +176,7 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
               ),
               const PopupMenuItem(
                 value: 'minigame',
-                child: ListTile(leading: Icon(Icons.videogame_asset), title: Text('Permainan')),
+                child: ListTile(leading: Icon(Icons.videogame_asset), title: Text('Mini Game')),
               ),
               const PopupMenuItem(
                 value: 'profile',
@@ -251,7 +222,8 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
               ),
             ),
 
-            if (showFilters) _buildFiltersUI(),
+            if (showFilters)
+              _buildFiltersUI(),
 
             const SizedBox(height: 8),
 
@@ -306,7 +278,6 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
             ],
           ),
           const SizedBox(height: 10),
-
           // TOPIC FILTER
           Row(
             children: [
