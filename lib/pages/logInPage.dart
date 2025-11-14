@@ -73,16 +73,32 @@ class _LoginPageState extends State<LoginPage> {
         const SnackBar(content: Text('Login successful!')),
       );
 
-      // Navigate to DashboardPage with role & username
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => DashboardPage_Student(
-            userRole: role,
-            username: input,
-          ),
-        ),
-      );
+      // ==== ROLE-BASED REDIRECT ====
+      if(role == 'Teacher') {
+        /*
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) => DashboardPage_Teacher(
+                    userRole: role,
+                    username: input,
+                ),
+            ),
+        );
+        */
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) => DashboardPage_Student(
+                    userRole: role,
+                    username: input,
+                ),
+            ),
+        );
+      }
+
+
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
