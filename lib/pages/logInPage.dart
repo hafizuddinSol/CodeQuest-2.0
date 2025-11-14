@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       String email = input;
-      String role = 'Student'; // default role if needed
+      String role = 'Student';
 
       // Check if input is a username and get email + role
       if (!input.contains('@')) {

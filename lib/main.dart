@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      // Start at Register Page
+
       home: const LoginPage(),
 
       // Routes

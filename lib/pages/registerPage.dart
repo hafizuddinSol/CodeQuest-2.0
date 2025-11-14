@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/primary_button.dart';
+import 'logInPage.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function(String role, String username) onRegistered;
@@ -168,8 +169,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
               // Switch to login
               TextButton(
-                onPressed: widget.onSwitchToLogin,
-                child: const Text("Already have an account? Log in"),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LoginPage(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Already have an account? Log in",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
