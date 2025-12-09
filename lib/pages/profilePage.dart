@@ -75,27 +75,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
           ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                // Handle Back action - currently a placeholder
-              },
-              icon: const Icon(Icons.arrow_back, size: 16),
-              label: const Text('Back'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryIndigo,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Center(
         child: SingleChildScrollView(

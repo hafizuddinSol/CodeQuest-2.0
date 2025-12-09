@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/notification_widget.dart';
 import '../miniGame_teacher/dashboard_minigame.dart';
-import '../miniGame_student/student_dashboard.dart';
 import '../forum/home_screen.dart';
 import '../learning/learningHomePage.dart';
 import 'logInPage.dart';
@@ -28,6 +27,11 @@ class DashboardPage_Teacher extends StatefulWidget {
 class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
   final List<Widget> widgets = [];
 
+  // Filters
+  bool showFilters = false;
+  String timeFilter = "all";
+  String topicFilter = "all";
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +39,8 @@ class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
     widgets.add(NotificationWidget(
       key: UniqueKey(),
       onRemove: () => _removeWidget(0),
+      timeFilter: timeFilter,
+      topicFilter: topicFilter,
     ));
   }
 
@@ -50,27 +56,20 @@ class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
       widgets.add(NotificationWidget(
         key: UniqueKey(),
         onRemove: () => _removeWidget(newIndex),
+        timeFilter: timeFilter,
+        topicFilter: topicFilter,
       ));
     });
     Navigator.pop(context);
   }
 
   void _navigateToMiniGame() {
-    if (widget.userRole == 'teacher') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => DashboardMiniGamePage(teacherName: widget.username),
-        ),
-      );
-    } else if (widget.userRole == 'student') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => StudentDashboard(studentName: widget.username),
-        ),
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DashboardMiniGamePage(teacherName: widget.username),
+      ),
+    );
   }
 
   void _signOut() async {
@@ -88,6 +87,21 @@ class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
       MaterialPageRoute(builder: (_) => const LoginPage()),
           (route) => false,
     );
+  }
+
+  void _refreshFilteredWidgets() {
+    setState(() {
+      for (int i = 0; i < widgets.length; i++) {
+        if (widgets[i] is NotificationWidget) {
+          widgets[i] = NotificationWidget(
+            key: UniqueKey(),
+            onRemove: () => _removeWidget(i),
+            timeFilter: timeFilter,
+            topicFilter: topicFilter,
+          );
+        }
+      }
+    });
   }
 
   void _showAddWidgetSheet() {
@@ -136,27 +150,17 @@ class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
           ],
         ),
         actions: [
-          // Dropdown menu
           PopupMenuButton<String>(
             icon: const Icon(Icons.menu, color: Colors.white),
             onSelected: (value) {
               if (value == 'learning') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LearningHomePage()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const LearningHomePage()));
               } else if (value == 'forum') {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const HomeScreen()),
-                );
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
               } else if (value == 'minigame') {
                 _navigateToMiniGame();
               } else if (value == 'profile') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfileEditPage()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileEditPage()));
               } else if (value == 'signout') {
                 _signOut();
               }
@@ -164,47 +168,31 @@ class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'learning',
-                child: ListTile(
-                  leading: Icon(Icons.menu_book),
-                  title: Text('Learning Homepage'),
-                ),
+                child: ListTile(leading: Icon(Icons.menu_book), title: Text('Learning Homepage')),
               ),
               const PopupMenuItem(
                 value: 'forum',
-                child: ListTile(
-                  leading: Icon(Icons.forum),
-                  title: Text('Forum'),
-                ),
+                child: ListTile(leading: Icon(Icons.forum), title: Text('Forum')),
               ),
               const PopupMenuItem(
                 value: 'minigame',
-                child: ListTile(
-                  leading: Icon(Icons.videogame_asset),
-                  title: Text('Mini Game'),
-                ),
+                child: ListTile(leading: Icon(Icons.videogame_asset), title: Text('Mini Game')),
               ),
               const PopupMenuItem(
                 value: 'profile',
-                child: ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Profile'),
-                ),
+                child: ListTile(leading: Icon(Icons.person), title: Text('Profile')),
               ),
               const PopupMenuDivider(),
               const PopupMenuItem(
                 value: 'signout',
                 child: ListTile(
                   leading: Icon(Icons.logout, color: Colors.redAccent),
-                  title: Text(
-                    'Sign Out',
-                    style: TextStyle(color: Colors.redAccent),
-                  ),
+                  title: Text('Sign Out', style: TextStyle(color: Colors.redAccent)),
                 ),
               ),
             ],
           ),
 
-          // Add Notification Widget Button
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: FloatingActionButton(
@@ -217,38 +205,127 @@ class _DashboardPage_TeacherState extends State<DashboardPage_Teacher> {
         ],
       ),
       body: SafeArea(
-        child: widgets.isEmpty
-            ? Center(
-          child: Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 48),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.widgets_outlined, size: 48, color: kPrimaryColor),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No widgets added yet',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: _showAddWidgetSheet,
-                    icon: const Icon(Icons.add, size: 16),
-                    label: const Text('Add Your First Widget'),
-                  ),
-                ],
+        child: Column(
+          children: [
+            // ---------------- FILTER BUTTON + AREA ---------------------
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black87,
+                  elevation: 1,
+                ),
+                icon: const Icon(Icons.filter_alt),
+                label: const Text("Filters"),
+                onPressed: () => setState(() => showFilters = !showFilters),
               ),
             ),
+
+            if (showFilters)
+              _buildFiltersUI(),
+
+            const SizedBox(height: 8),
+
+            // ---------------- WIDGETS STACK ---------------------
+            Expanded(
+              child: widgets.isEmpty
+                  ? _buildEmptyState()
+                  : ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: widgets.length,
+                itemBuilder: (_, index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: widgets[index],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFiltersUI() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black12),
+      ),
+      child: Column(
+        children: [
+          // TIME FILTER
+          Row(
+            children: [
+              const Text("Time:", style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(width: 10),
+              DropdownButton<String>(
+                value: timeFilter,
+                items: const [
+                  DropdownMenuItem(value: "all", child: Text("All Time")),
+                  DropdownMenuItem(value: "today", child: Text("Today")),
+                  DropdownMenuItem(value: "week", child: Text("This Week")),
+                  DropdownMenuItem(value: "month", child: Text("This Month")),
+                ],
+                onChanged: (value) {
+                  setState(() => timeFilter = value!);
+                  _refreshFilteredWidgets();
+                },
+              ),
+            ],
           ),
-        )
-            : ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: widgets.length,
-          itemBuilder: (_, index) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: widgets[index],
+          const SizedBox(height: 10),
+          // TOPIC FILTER
+          Row(
+            children: [
+              const Text("Topic:", style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(width: 10),
+              DropdownButton<String>(
+                value: topicFilter,
+                items: const [
+                  DropdownMenuItem(value: "all", child: Text("All Topics")),
+                  DropdownMenuItem(value: "learning", child: Text("Learning")),
+                  DropdownMenuItem(value: "minigame", child: Text("Mini Game")),
+                  DropdownMenuItem(value: "forum", child: Text("Forum")),
+                  DropdownMenuItem(value: "profile", child: Text("Profile")),
+                ],
+                onChanged: (value) {
+                  setState(() => topicFilter = value!);
+                  _refreshFilteredWidgets();
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 48),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.widgets_outlined, size: 48, color: kPrimaryColor),
+              const SizedBox(height: 16),
+              Text(
+                'No widgets added yet',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _showAddWidgetSheet,
+                icon: const Icon(Icons.add, size: 16),
+                label: const Text('Add Your First Widget'),
+              ),
+            ],
           ),
         ),
       ),

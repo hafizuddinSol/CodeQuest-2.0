@@ -21,7 +21,7 @@ class ProgressWidget extends StatelessWidget {
         progressItems.length);
 
     return Card(
-      color: const Color(0xFF1E1E2C),
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
       child: Padding(
@@ -34,27 +34,21 @@ class ProgressWidget extends StatelessWidget {
               children: [
                 Row(
                   children: const [
-                    Icon(Icons.trending_up, color: Colors.white, size: 22),
+                    Icon(Icons.trending_up, color: Color(0xFF4256A4), size: 22),
                     SizedBox(width: 8),
                     Text(
-                      'Progress Tracker',
+                      'Jejak Pencapaian',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                        color: Color(0xFF4256A4),
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: onRemove ??
-                          () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Progress widget closed')),
-                        );
-                      },
-                ),
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    onPressed: onRemove),
               ],
             ),
 
@@ -74,14 +68,14 @@ class ProgressWidget extends StatelessWidget {
                           Text(
                             item['name'],
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             '${item['progress']}%',
                             style: const TextStyle(
-                              color: Colors.grey,
+                              color: Colors.black,
                               fontSize: 13,
                             ),
                           ),
@@ -93,7 +87,7 @@ class ProgressWidget extends StatelessWidget {
                         child: LinearProgressIndicator(
                           value: item['progress'] / 100,
                           minHeight: 8,
-                          backgroundColor: Colors.grey[800],
+                          backgroundColor: Colors.grey,
                           valueColor: AlwaysStoppedAnimation<Color>(item['color']),
                         ),
                       ),
@@ -120,7 +114,7 @@ class ProgressWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Overall Progress',
+                        'Tahap Kemajuan',
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                       const SizedBox(height: 6),
@@ -139,7 +133,7 @@ class ProgressWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       const Text(
-                        'Active Projects',
+                        'Projek Terkini',
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                       const SizedBox(height: 6),

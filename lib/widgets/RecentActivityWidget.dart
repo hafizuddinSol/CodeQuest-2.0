@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class NotificationWidget extends StatelessWidget {
+class RecentActivityWidget extends StatelessWidget {
   final VoidCallback onRemove;
-  final String timeFilter;   // "all", "today", "week", "month"
-  final String topicFilter;  // "all", "Learning", "Minigame", "Forum", "Profile", "Pseudocode", "Flowchart"
 
-  const NotificationWidget({
+  const RecentActivityWidget({
     super.key,
     required this.onRemove,
-    required this.timeFilter,
-    required this.topicFilter,
   });
 
   Color _getColor(String colorName) {
@@ -36,40 +32,15 @@ class NotificationWidget extends StatelessWidget {
       case 'info':
         return Icons.info;
       default:
-        return Icons.notifications;
+        return Icons.history;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Firestore query
     Query query = FirebaseFirestore.instance
-        .collection('notifications')
+        .collection('recent_activity')
         .orderBy('timestamp', descending: true);
-
-    // Topic filter latest 18/11
-    if (topicFilter.toLowerCase() != 'all') {
-      query = query.where('topic', isEqualTo: topicFilter);
-    }
-
-    // Time filter latest 18/11
-    if (timeFilter != 'all') {
-      final now = DateTime.now();
-      DateTime from;
-
-      if (timeFilter == 'today') {
-        from = DateTime(now.year, now.month, now.day);
-      } else if (timeFilter == 'week') {
-        from = now.subtract(const Duration(days: 7));
-      } else {
-        // month
-        final prevMonth = now.month - 1 <= 0 ? 12 : now.month - 1;
-        final year = now.month - 1 <= 0 ? now.year - 1 : now.year;
-        from = DateTime(year, prevMonth, now.day);
-      }
-
-      query = query.where('timestamp', isGreaterThan: from);
-    }
 
     return Card(
       color: Colors.white,
@@ -80,29 +51,26 @@ class NotificationWidget extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: const [
-                    Icon(Icons.notifications,
-                        color: Color(0xFF4256A4), size: 22),
-                    SizedBox(width: 10),
-                    Text(
-                      "Notifikasi",
-                      style: TextStyle(
-                        color: Color(0xFF4256A4),
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                const Icon(Icons.history, color: Color(0xFF4256A4), size: 22),
+                const SizedBox(width: 10),
+                const Text(
+                  "Aktiviti Terkini",
+                  style: TextStyle(
+                    color: Color(0xFF4256A4),
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 IconButton(
-                    icon: const Icon(Icons.close, color: Colors.black54),
-                    onPressed: onRemove),
+                  icon: const Icon(Icons.close, color: Colors.black54),
+                  onPressed: onRemove,
+                ),
               ],
             ),
+
             const SizedBox(height: 10),
+
             StreamBuilder<QuerySnapshot>(
               stream: query.snapshots(),
               builder: (context, snapshot) {
@@ -118,25 +86,25 @@ class NotificationWidget extends StatelessWidget {
                     height: 100,
                     child: Center(
                       child: Text(
-                        "No notifications available",
+                        "No recent activity",
                         style: TextStyle(color: Colors.black54),
                       ),
                     ),
                   );
                 }
 
-                final notifications = snapshot.data!.docs;
+                final activities = snapshot.data!.docs;
 
                 return SizedBox(
                   height: 280,
                   child: ListView.separated(
-                    itemCount: notifications.length,
+                    itemCount: activities.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final data =
-                      notifications[index].data() as Map<String, dynamic>;
+                      activities[index].data() as Map<String, dynamic>;
                       final color = _getColor(data['color'] ?? 'grey');
-                      final icon = _getIcon(data['icon'] ?? 'notifications');
+                      final icon = _getIcon(data['icon'] ?? 'history');
 
                       return Container(
                         decoration: BoxDecoration(
@@ -154,19 +122,30 @@ class NotificationWidget extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(data['title'] ?? 'Untitled',
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black87)),
+                                  Text(
+                                    data['title'] ?? 'Untitled',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
                                   const SizedBox(height: 4),
-                                  Text(data['message'] ?? '',
-                                      style: const TextStyle(
-                                          fontSize: 13, color: Colors.black54)),
+                                  Text(
+                                    data['message'] ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
                                   const SizedBox(height: 4),
-                                  Text(data['time'] ?? '',
-                                      style: const TextStyle(
-                                          fontSize: 11, color: Colors.grey)),
+                                  Text(
+                                    data['time'] ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
