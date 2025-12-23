@@ -12,6 +12,8 @@ import '../widget_layout/layout_service.dart';
 import '../widget_layout/layout_model.dart';
 import '../widget_layout/widget_factory.dart';
 //Commit nata
+//Commit hafiz
+//Commit dina
 const Color kPrimaryColor = Color(0xFF2537B4);
 const Color kBackgroundColor = Color(0xFFF0F0FF);
 
