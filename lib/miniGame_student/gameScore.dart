@@ -7,6 +7,8 @@ class ScorePage extends StatelessWidget {
 
   const ScorePage({super.key, required this.studentName});
 
+  //Testing Commit
+
   @override
   Widget build(BuildContext context) {
     final FirebaseService _service = FirebaseService();
@@ -35,8 +37,9 @@ class ScorePage extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = docs[index].data() as Map<String, dynamic>;
               final date = (data['date'] as Timestamp?)?.toDate();
-              final formattedDate =
-              date != null ? "${date.day}/${date.month}/${date.year}" : "";
+              final formattedDate = date != null
+                  ? "${date.day}/${date.month}/${date.year}"
+                  : "";
 
               return ListTile(
                 title: Text(data['gameTitle'] ?? ''),
