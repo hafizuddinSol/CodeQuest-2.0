@@ -11,9 +11,11 @@ import 'profilePage.dart';
 import '../widget_layout/layout_service.dart';
 import '../widget_layout/layout_model.dart';
 import '../widget_layout/widget_factory.dart';
+import 'faq.dart';
 //Commit nata
 //Commit hafiz
 //Commit dina
+//Commit akif
 const Color kPrimaryColor = Color(0xFF2537B4);
 const Color kBackgroundColor = Color(0xFFF0F0FF);
 
@@ -161,6 +163,8 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
                 _navigateToMiniGame();
               } else if (value == 'profile') {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileEditPage()));
+              } else if (value == 'faq') {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const FAQPage()));
               } else if (value == 'signout') {
                 _signOut();
               }
@@ -203,6 +207,16 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
                     Icon(Icons.person_outline, color: Colors.orange),
                     SizedBox(width: 12),
                     Text("Profile", style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'faq',
+                child: Row(
+                  children: const [
+                    Icon(Icons.person_outline, color: Colors.blue),
+                    SizedBox(width: 12),
+                    Text("FAQ", style: TextStyle(fontSize: 15)),
                   ],
                 ),
               ),
