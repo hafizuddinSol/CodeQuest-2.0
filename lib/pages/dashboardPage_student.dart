@@ -35,7 +35,7 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
   final List<Widget> widgets = [];
 
   final LayoutService _layoutService = LayoutService();
-  String userId = ""; // will store Firebase user ID
+  String userId = "";
 
 
 
@@ -119,6 +119,9 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
     });
   }
 
+
+  //main dashboard header
+
   // ---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
@@ -131,11 +134,11 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Laman Utama',
+              'Dashboard',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             Text(
-              'Selamat Datang, ${widget.username}',
+              'Welcome, ${widget.username}',
               style: const TextStyle(fontSize: 12, color: Colors.white70),
             ),
           ],
@@ -250,7 +253,7 @@ class _DashboardPage_StudentState extends State<DashboardPage_Student> {
                   elevation: 1,
                 ),
                 icon: const Icon(Icons.filter_alt),
-                label: const Text("Tapisan"),
+                label: const Text("Filter"),
                 onPressed: () => setState(() => showFilters = !showFilters),
               ),
             ),
