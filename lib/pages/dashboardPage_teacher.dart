@@ -4,7 +4,6 @@ import 'package:sulam_project/learning/learning_teacher.dart';
 import '../widgets/notification_widget.dart';
 import '../miniGame_teacher/dashboard_minigame.dart';
 import '../forum/home_screen.dart';
-import '../learning/learning_teacher.dart';
 import 'logInPage.dart';
 import 'profilePage.dart';
 
