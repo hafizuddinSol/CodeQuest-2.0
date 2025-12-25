@@ -15,6 +15,7 @@ import 'faq.dart';
 //Commit nata
 //Commit hafiz
 //Commit dina
+//Commit akif
 const Color kPrimaryColor = Color(0xFF2537B4);
 const Color kBackgroundColor = Color(0xFFF0F0FF);
 
